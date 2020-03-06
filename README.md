@@ -100,7 +100,24 @@ este caso podemos ver que al menos hay 3 opciones:
 
 ## Propagacion
 
+Cuando un nodo tienen hijos, tambien recibira los eventos que ocurran dentro de los hijos. De modo que si un boton dentro de un parrafo es clicado, el `event handler`
+del parrafo tambien podra ver/recibir el evento `click`.
 
+Pero si tanto el parrafo y el boton tienen su propio `handler`, el mas especifico tendra preferencia (siendo en el ejemplo el del boton). El evento se ira propagando de 
+forma inversa, desde el mas especifico hasta el mas general.  Si embargo, en cualquier punto del nodo podemos llamar a la instruccion `stopPropagation` para detener 
+este proceso.
+
+    <p>Press Control-Space to continue.</p>
+    <script>
+    window.addEventListener("keydown", event => {
+        if (event.key == " " && event.ctrlKey) {
+        console.log("Continuing!");
+        }
+    });
+    </script>
+
+En el ejemplo anterior (<i>Example5.html</i>), vemos que podemos registrar eventos al objeto `window`,de modo que, en el caso especifico
+de que se lea alguna tecla, y esta o estas sean las teclas `ctrl` y `espacio` ejecutara el evento.
 
 
 ## Default Actions
