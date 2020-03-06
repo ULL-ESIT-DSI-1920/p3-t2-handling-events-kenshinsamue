@@ -74,7 +74,34 @@ Una vez fuera de la funcion nos encontramos con la instruccion que permitira eje
 
 ## Event Objects    
 
+Para poder controlar un evento, podemos ademas pasar como parametro el propio evento para obener o manejar mas informacion. El siguiente
+codigo pertenece a <i>Example4.html</i>:
+
+    <button>Click me any way you want</button>
+    <script>
+    let button = document.querySelector("button");
+    button.addEventListener("mousedown", event => {
+        if (event.button == 0) {
+        console.log("Left button");
+        } else if (event.button == 1) {
+        console.log("Middle button");
+        } else if (event.button == 2) {
+        console.log("Right button");
+        }
+    });
+    </script>
+
+Como vemos tenemos el evento `mousedown` que se activa cuando un dispositivo apuntador hace algun tipo de click sobre algun elemento, en
+este caso podemos ver que al menos hay 3 opciones:
+
+* `event.button` == 0, si se hizo click con el boton izquierdo
+* `event.button` == 1, si se hizo click con el boton central
+* `event.button` == 2, si se hizo click con el boton derecho
+
 ## Propagacion
+
+
+
 
 ## Default Actions
 
