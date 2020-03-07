@@ -122,8 +122,71 @@ de que se lea alguna tecla, y esta o estas sean las teclas `ctrl` y `espacio` ej
 
 ## Default Actions
 
+los eventos pueden tener alguna accion asociadas con las mismas. De mosdo que, si por ejemplo, si se hace click sobre un enlace se 
+obtenga el destino de dicho link.
+
+Para la mayoria de los eventos, los diferentes `handlers` de enventos de JavaScript son llamados antes de que la accion por defecto
+sea ejecutada. Si el `handler` no nos indica ninguna accion en particular, se ejecutara la que este establecida por defecto
+
+JavaScript nos facilita un metodo `preventDefault`, que se usa dentro de los handlers para evitar cualquier tipo de accion por defautl
+de dichos eventos. Tenemos por ejemplo <i>Example6.html</i>:
+
+    <a href="https://developer.mozilla.org/">MDN</a>
+    <script>
+    let link = document.querySelector("a");
+    link.addEventListener("click", event => {
+        console.log("Nope.");
+        event.preventDefault();
+    });
+    </script>
+
+Donde podemos destacar que creamos un enlace dentro de una etiqueta `<a>`, dicha etiqueta la guardamos como objeto, y asociamos un 
+`event handler` para cuando se realize un evento de tipo `click`. Dicho evento lo que hara es mostrar un mensaje, para posteriormente
+eliminar la accion por defecto.
+
+Aunque el metodo `preventDefault` es util se aconseja no usarlo a no ser que se tenga una muy buena razon, ya que puede romper el
+comportamiento de la pagina.
+
+
 ## key Events
 
+Las teclas tienen asociadas diferentes eventos:
+
+* `Keydown`: este evento sucede cuando se oprime una tecla, pero no se limita solo a cuando fisicamente se oprime, sino que si se 
+mantiene mandara un evento cada vez que el teclado mande señal de dicha tecla, hasta que se deja de oprimir.
+
+* `keyup` : este evento sucede cuando se termina de oprimir una tecla 
+
+    <p>This page turns violet when you hold the V key.</p>
+    <script>
+    window.addEventListener("keydown", event => {
+        if (event.key == "v") {
+        document.body.style.background = "violet";
+        }
+    });
+    window.addEventListener("keyup", event => {
+        if (event.key == "v") {
+        document.body.style.background = "";
+        }
+    });
+    </script>
+
+En el codigo podemos ver que se crea un `handler` tanto para cuando se presiona la tecla `v` como cuando se suelta. Este codigo podremos
+encontrarlo en <i>Example7.html</i>
+
+Otra cosa importante a destacar es que podemos registrar combinaciones de cualquier tipo de teclas presionadas al `handler` para definir
+un compotamiento del programa adecuado a dicho evento. En <i>Example8.html</i> tenemos :
+
+    <p>Press Control-Space to continue.</p>
+    <script>
+    window.addEventListener("keydown", event => {
+        if (event.key == " " && event.ctrlKey) {
+        console.log("Continuing!");
+        }
+    });
+    </script>
+
+Donde podremos ver que el evento regustra cuando hacemos la combinacion `espacio` + `control`.
 ## Pointer events
 
 ### mouse clicks
