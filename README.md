@@ -187,19 +187,123 @@ un compotamiento del programa adecuado a dicho evento. En <i>Example8.html</i> t
     </script>
 
 Donde podremos ver que el evento regustra cuando hacemos la combinacion `espacio` + `control`.
+
+
 ## Pointer events
+
+Actualmente existen 2 formas de apuntar a las cosas en pantalla: el raton y las pantallas tactiles. Cada una nos proporciona un tipo
+de evento diferente
+
 
 ### mouse clicks
 
+Cuando se realiza un click con el raton se pueden leer diferentes eventos:
+
+* `mousedown` 
+* `mouseup`
+
+Ambos tienen un comportamiento similar a `keydown` y a `keyup`. Otro evento que podemos encontrarnos es :
+
+* `doubleclick`
+
+Cuando dos clicks ocurren seguidos.6
+
 ### mouse motion
 
-### Touch events
+Cada vez que el puntero se mueve, se crea un evento `mousemove`. A travez de este evento podemos seguir la posicion del raton. Un ejemplo e esto lo encontramos en 
+<i>Example9.html</i>:
+
+    <p>Drag the bar to change its width:</p>
+    <div style="background: orange; width: 60px; height: 20px">
+    </div>
+    <script>
+    let lastX; // Tracks the last observed mouse X position
+    let bar = document.querySelector("div");
+    bar.addEventListener("mousedown", event => {
+        if (event.button == 0) {
+        lastX = event.clientX;
+        window.addEventListener("mousemove", moved);
+        event.preventDefault(); // Prevent selection
+        }
+    });
+
+    function moved(event) {
+        if (event.buttons == 0) {
+        window.removeEventListener("mousemove", moved);
+        } else {
+        let dist = event.clientX - lastX;
+        let newWidth = Math.max(10, bar.offsetWidth + dist);
+        bar.style.width = newWidth + "px";
+        lastX = event.clientX;
+        }
+    }
+    </script>
+
+
+En este ehemplo podemos ver que controlamos 2 eventos, el primero es el de clickar sobre una zona anaranjada, y el segundo es el de `mousemove` mientras mantenemos el click presionado.
 
 ## Scroll events
 
+Cada vez que un elemento es movido con la rueda del raton o `scrolled`, el evento `scroll` es lanzado. Este tiene diferentes usos tales como saber que es lo que el
+usuario esta visualizando actualmente, o bien, para mostrar algun ripo de progreso en el contenido a mostrar. En <i>Example10.html</i>
+
+    <style>
+    #progress {
+        border-bottom: 2px solid blue;
+        width: 0;
+        position: fixed;
+        top: 0; left: 0;
+    }
+    </style>
+    <div id="progress"></div>
+    <script>
+    // Create some content
+    document.body.appendChild(document.createTextNode(
+        "supercalifragilisticexpialidocious ".repeat(1000)));
+
+    let bar = document.querySelector("#progress");
+    window.addEventListener("scroll", () => {
+        let max = document.body.scrollHeight - innerHeight;
+        bar.style.width = `${(pageYOffset / max) * 100}%`;
+    });
+    </script>
+
+Se nos muestra una cantidad de texto enorme, y a medida que bajamos o subimos una barra de color azul aumenta o disminuye para 
+representar la cantidad de contenido que hemos visto y la que falta por ver.
+
 ## Focus events
 
+A medida que el usuario navega por una pagina, es inevitable que tenga que interactuar con alguno de los elementos dispuestos dentro
+del contenido de dicha pagina. Se le llama `focus` a aquel elemento que esta actualmente en interaccion directa con el usuario, de 
+modo que si el usuario selecciona un `textbox` dicho elemento sera el que tenga el focus actual de la ventana, lo que le permitira al
+usuario al momento de escribir, que el contenido sea enviado a dicha `textbox`.
+
+Podemos encontrar un ejemplo de esto en <i>Example11.html</i>, en donde tendremos dos campos para introducir informacion, y vemos que
+al principio los marcos son de color negro, y al seleccionarlos, obtienen el focus y cambian a un gris.
+
+    <p>Name: <input type="text" data-help="Your full name"></p>
+    <p>Age: <input type="text" data-help="Your age in years"></p>
+    <p id="help"></p>
+
+    <script>
+    let help = document.querySelector("#help");
+    let fields = document.querySelectorAll("input");
+    for (let field of Array.from(fields)) {
+        field.addEventListener("focus", event => {
+        let text = event.target.getAttribute("data-help");
+        help.textContent = text;
+        });
+        field.addEventListener("blur", event => {
+        help.textContent = "";
+        });
+    }
+    </script>
+
+
 ## Load events
+
+
+
 
 ## Events and event loop
 
