@@ -346,7 +346,7 @@ El siguiente codigo genera un `worker` que ejecuta el script anterior, lo envia 
 
 La funcion `postMessage`, creara un evento `message` en el recividor. El script creado por el `worker` envia y recive mensajes a travez 
 del objeto `Worker`, donde el `worker` se comunica con el script que lo creo mediante un mensaje y escichando directamente en su 
-`global scope`.
+`global scope`. Esto lo podremos encontrar dentro de <i>Example12.js</i>.
 
 Solamente vaores que pueden ser representados como `JSON` pueden ser enviados como mensajes, en caso contrario se recivira una copia de 
 ellos, mas que el valor en si. 
@@ -355,6 +355,33 @@ ellos, mas que el valor en si.
 
 ## timer
 
-## Debouncing
+Vimos que `setTimeout` programa otra funcion para se llamada despues, y despues de un numero dado de milisegundos.
 
-## Sumary
+A veces necesitas cancelar una funcion que se ha programado. Esto esta hecho mediante el almacenaje del valor retornado por 
+`setTimeout` y llamando a `clearTimeout`. <i>Ejemplo13.js</i>
+
+    let bombTimer = setTimeout(() => {
+        console.log("BOOM!");
+    }, 500);
+
+    if (Math.random() < 0.5) { // 50% chance
+        console.log("Defused.");
+        clearTimeout(bombTimer);
+    }
+
+La funcion `cancelAnimateFrame` trabaja en el mismo modo que `clearTimeout`, llamandolo en un valor retornado por 
+`requestAnimationFrame` cancelara dicho <i>frame</i>
+
+Una funcion similar al conjunto de sintrucciones `<setInterval, clearInterval>` son usados para establecer los temporizadores que 
+deben repetir cada <b>X</i> milisegundos.<i> Example14.js</i>:
+
+
+    let ticks = 0;
+    let clock = setInterval(() => {
+        console.log("tick", ticks++);
+        if (ticks == 10) {
+            clearInterval(clock);
+            console.log("stop.");
+        }
+    }, 200);
+
