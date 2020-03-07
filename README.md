@@ -302,10 +302,55 @@ al principio los marcos son de color negro, y al seleccionarlos, obtienen el foc
 
 ## Load events
 
+El evento `load` es lanzado al cargar una pagina. Esto usualmente es usado para programar la inicializacion de acciones que requieran
+de todo el documento para ser ejecutados.
 
+Por otro lado cuando una pagina es cerrada o redirigida hacia otro sitio, tenemos que se ejecuta el evento `beforeunload`. El uso 
+principal del evento es para prevenir hacciones accidentales del usuario tales como cerrar un documento. Si se previene el 
+comportamientocon este evento y se establece una propiedad `returnValue` dentro de un evento, sobre un string, el buscador nos mostrara 
+un dialogo preguntando si realmente se quiere salir de la pagina.
 
 
 ## Events and event loop
+
+En el contexto del `evento loop`, los `handler events` se comportan como cualquier otra notificacion asincrona. Estas son programadas para correr antes de que tengan ocacion de ejecutarse.
+
+El hecho de que los eventos pueden ser procesados solo cuando nada mas este corriendo, con lo que si el `event loop` esta asociado
+a algun otro trabajo, cualquier interaccion con la pagina sera retrasada hasta que el proceso termine. Con lo que si se programa
+demasiados trabajos, independientemente si tenemos algunos trabajos largos o varios trabajos cortos, la pagina se volvera lenta
+y horrible de usar.
+
+Si se quiere realizar realmente mantener procesos de consumo de tiempo en segundo plano, sin bloquear la pagina, el navegador nos 
+da `web workers`. Un <b>web worker</b> es un proceso de JavasCriptque trabaja de forma paralela al respecto del script principal.
+
+En un caso en el que se haga la raiz cuadrada de un nuemero pesado, y que consuma bastante tiempo de ejecucion que queremos que se 
+ejecute en un hilo paralelo. Deberemos escribir un fichero llamado `code/squareworker.js`. Esto responde a los mensajes resultantes
+de computar la raiz cuadrada y envia una respuesta :
+
+    addEventListener("message", event => {
+        postMessage(event.data * event.data);
+    });
+
+
+Para evitar el problema de tener multiples hilos tocando los mismos datos, los trabajadores no comparten un ambito global o cualqier 
+otra informacion perteneciente al ambito del script principal. En cambio, puedes comunicarte con mensajes.
+
+El siguiente codigo genera un `worker` que ejecuta el script anterior, lo envia en algunos mensajes y expulsa la respuesta.
+
+    let squareWorker = new Worker("code/squareworker.js");
+        squareWorker.addEventListener("message", event => {
+         console.log("The worker responded:", event.data);
+    });
+    squareWorker.postMessage(10);
+    squareWorker.postMessage(24);
+
+La funcion `postMessage`, creara un evento `message` en el recividor. El script creado por el `worker` envia y recive mensajes a travez 
+del objeto `Worker`, donde el `worker` se comunica con el script que lo creo mediante un mensaje y escichando directamente en su 
+`global scope`.
+
+Solamente vaores que pueden ser representados como `JSON` pueden ser enviados como mensajes, en caso contrario se recivira una copia de 
+ellos, mas que el valor en si. 
+
 
 
 ## timer
