@@ -157,19 +157,19 @@ mantiene mandara un evento cada vez que el teclado mande señal de dicha tecla, 
 
 * `keyup` : este evento sucede cuando se termina de oprimir una tecla 
 
-    <p>This page turns violet when you hold the V key.</p>
-    <script>
-    window.addEventListener("keydown", event => {
-        if (event.key == "v") {
-        document.body.style.background = "violet";
-        }
-    });
-    window.addEventListener("keyup", event => {
-        if (event.key == "v") {
-        document.body.style.background = "";
-        }
-    });
-    </script>
+        <p>This page turns violet when you hold the V key.</p>
+        <script>
+        window.addEventListener("keydown", event => {
+            if (event.key == "v") {
+            document.body.style.background = "violet";
+            }
+        });
+        window.addEventListener("keyup", event => {
+            if (event.key == "v") {
+            document.body.style.background = "";
+            }
+        });
+        </script>
 
 En el codigo podemos ver que se crea un `handler` tanto para cuando se presiona la tecla `v` como cuando se suelta. Este codigo podremos
 encontrarlo en <i>Example7.html</i>
