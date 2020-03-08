@@ -1,0 +1,49 @@
+<tab-panel>
+    <div data-tabname="one">Tab one</div>
+    <div data-tabname="two">Tab two</div>
+    <div data-tabname="three">Tab three</div>
+  </tab-panel>
+  <script>
+  
+    function asTabs(node) {           // obtenemos la entidad tab-panel
+  
+      var tabs = [];      // creamos un array para guardar las tabs
+  
+      for (var i = 0; i < node.childNodes.length; i++) {    // por cada elemento dentro del tab-panel
+  
+        var child = node.childNodes[i];                     // lo guardamos en esta variable temporal 
+        
+        if (child.nodeType == document.ELEMENT_NODE)        // verificamos el tipo de nodo que esta en la var temporal es un nodo de tipo elemento (1)
+          tabs.push(child);                                 // guardamos ese nodo dentro de tabs (basicamente contenemos el texto que nos interesa)
+  
+      }
+  
+      var tabList = document.createElement("div");    // creamos un elemento div
+  
+      tabs.forEach(function(tab, i) {     // por cada tab haremos
+  
+        var button = document.createElement("button");                          // creamos un elemento boton
+        button.textContent = tab.getAttribute("data-tabname");                   // en el texto del boton, pondremos lo que hay en data-tabname
+        button.addEventListener("click", function() { selectTab(i); });          // escuchamos para el evento click, cuyo callback sera la funcion selectTab
+        tabList.appendChild(button);                                            // metemos en tabList el elemento creado y guardado en "button"
+  
+      });
+      
+      node.insertBefore(tabList, node.firstChild);    // cambiamos el orden de los nodos (etiqueta), para que las tabs aparezcan primero que el contenido
+  
+      function selectTab(n) {               // obtenemos un numero del boton seleccionado 
+        tabs.forEach(function(tab, i) {       // recorremos todo el array tab
+          if (i == n)                         // si el i coincide con n 
+            tab.style.display = "";           // dejamos mostrarlo
+          else                                // en caso contrario, se oculta
+            tab.style.display = "none";
+        });
+      
+      }
+      selectTab(0);       // por defecto ponemos el primer tab y ocultamos todos los tab-panel que no correspondan con el id del boton seleccionado
+  
+  
+    }
+  
+    asTabs(document.querySelector("tab-panel"));    // seleccionamos el primer tab panel y lo mandamos al asTabs
+  </script>
