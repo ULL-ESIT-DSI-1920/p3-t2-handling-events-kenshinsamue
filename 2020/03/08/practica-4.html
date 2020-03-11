@@ -1,0 +1,402 @@
+<h1 id="practica-4-manejando-eventos">Practica 4: Manejando Eventos</h1>
+
+<h2 id="evente-handlers">Evente Handlers</h2>
+
+<p>Muchos sistemas al momento de manejar instrucciones de entrada suelen usar una cola, en donde se almacenan temporalmente dichas 
+instrucciones hasta que son ejecutadas eventualmente. Esto requiere que, en sistemas software, se tenga un programa que valla 
+revisando dicha cola para ir extrayendo y ejecutando lo que encuente ahi.</p>
+
+<p>Existe algo que se llama <code class="highlighter-rouge">polling</code>, que es la cantidad de tiempo en la que ocurre un evento y el programa descrito anteriormente 
+reaccionando a dicho evento. El <code class="highlighter-rouge">polling</code> trae como consecuencia que el programa se muestre en un estado no responsivo.</p>
+
+<p>Un mecanismo alternativo, es simplemente activar nuestro codigo cuando ocurra un evento, en vez de mantenerlo en una alerta constante.
+Los navegadores, tienen esta caracteristica implementada, dejandonos registrar funciones como manejadores para eventos especificos.
+Ejemplo <i>Example1.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Click this document to activate the handler.&lt;/p&gt;
+&lt;script&gt;
+window.addEventListener("click", () =&gt; {
+    console.log("You knocked?");
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Como podemos ver en el codigo, dentro de la etiqueta <code class="highlighter-rouge">script</code> nos encontramos con la siguiente instruccion:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>window.addEventListener("click", () =&gt; {
+</code></pre></div></div>
+
+<p>Donde <code class="highlighter-rouge">windows</code> representa al propio navegador como un objeto, y <code class="highlighter-rouge">addEventListener</code> es lo que nos permite crear handlers de eventos 
+en este caso estamos creando uno, que se activa al ocurrir un evento identificado como <code class="highlighter-rouge">click</code>, ejecutando la funcion anonima</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>() =&gt; {
+    console.log("You knocked?");
+}
+</code></pre></div></div>
+
+<h2 id="eventos-y-nodos-de-dom">Eventos y nodos de DOM</h2>
+
+<p>Cada <code class="highlighter-rouge">handler</code> de eventos de navegador esta registrado dentro de un contexto. Por ejemeplo, en el codigo dentro de <i>Example1.html</i>
+vemos que estara registrado, o enlazado, en la ventana actual del navegador. Como consecuencia el <code class="highlighter-rouge">handler</code> estadra dentro del <code class="highlighter-rouge">DOM</code>,
+de modo que cuando el evento ocurra solo podra ser evaluado en el contexto de donde dicho objeto este registrado. Como podremos ver en <i>Example2.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;button&gt;Click me&lt;/button&gt;
+&lt;p&gt;No handler here.&lt;/p&gt;
+&lt;script&gt;
+let button = document.querySelector("button");
+button.addEventListener("click", () =&gt; {
+    console.log("Button clicked.");
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Como vemos, el codigo html crea un boton y un mensaje. Cuando se hace click sobre el boton se genera un evento que es interceptado por la funcion
+<code class="highlighter-rouge">button.addEventListener</code> el cual escuchara el evento llamado <code class="highlighter-rouge">click</code> y ejecutando posteriormente la funcion anonima a modo de callback, mostrando el mensaje por 
+consola.</p>
+
+<p>En el siguiente codigo, encontrado en el fichero <i>Example3.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;button&gt;Act-once button&lt;/button&gt;
+&lt;script&gt;
+let button = document.querySelector("button");
+function once() {
+    console.log("Done.");
+    button.removeEventListener("click", once);
+}
+button.addEventListener("click", once);
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Como podemos ver hay una nueva instruccion, <code class="highlighter-rouge">document.querySelector</code> que se encarga de devolvernos el primer elemento del codigo http
+que coincida con lo que recibe por parametro, en este caso es un elemento de tipo <code class="highlighter-rouge">button</code>. Luego podemos ver que tenemos declarado una 
+funcion que al ser llamada mostrara un mensaje y posteriormente eliminara la relacion del evento <code class="highlighter-rouge">click</code> con dicha funcion. De esta
+forma cuando se vuelva a hacer click sobre el boton, este no hara nada, pues el evento <code class="highlighter-rouge">click</code> no estara enlazado a ninguna funcion
+para que la maneje a modo de <code class="highlighter-rouge">handler</code>.</p>
+
+<p>Una vez fuera de la funcion nos encontramos con la instruccion que permitira ejecutar la funcion <code class="highlighter-rouge">once</code> cuando el evento <code class="highlighter-rouge">click</code> ocurra.</p>
+
+<h2 id="event-objects">Event Objects</h2>
+
+<p>Para poder controlar un evento, podemos ademas pasar como parametro el propio evento para obener o manejar mas informacion. El siguiente
+codigo pertenece a <i>Example4.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;button&gt;Click me any way you want&lt;/button&gt;
+&lt;script&gt;
+let button = document.querySelector("button");
+button.addEventListener("mousedown", event =&gt; {
+    if (event.button == 0) {
+    console.log("Left button");
+    } else if (event.button == 1) {
+    console.log("Middle button");
+    } else if (event.button == 2) {
+    console.log("Right button");
+    }
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Como vemos tenemos el evento <code class="highlighter-rouge">mousedown</code> que se activa cuando un dispositivo apuntador hace algun tipo de click sobre algun elemento, en
+este caso podemos ver que al menos hay 3 opciones:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">event.button</code> == 0, si se hizo click con el boton izquierdo</li>
+  <li><code class="highlighter-rouge">event.button</code> == 1, si se hizo click con el boton central</li>
+  <li><code class="highlighter-rouge">event.button</code> == 2, si se hizo click con el boton derecho</li>
+</ul>
+
+<h2 id="propagacion">Propagacion</h2>
+
+<p>Cuando un nodo tienen hijos, tambien recibira los eventos que ocurran dentro de los hijos. De modo que si un boton dentro de un parrafo es clicado, el <code class="highlighter-rouge">event handler</code>
+del parrafo tambien podra ver/recibir el evento <code class="highlighter-rouge">click</code>.</p>
+
+<p>Pero si tanto el parrafo y el boton tienen su propio <code class="highlighter-rouge">handler</code>, el mas especifico tendra preferencia (siendo en el ejemplo el del boton). El evento se ira propagando de 
+forma inversa, desde el mas especifico hasta el mas general.  Si embargo, en cualquier punto del nodo podemos llamar a la instruccion <code class="highlighter-rouge">stopPropagation</code> para detener 
+este proceso.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Press Control-Space to continue.&lt;/p&gt;
+&lt;script&gt;
+window.addEventListener("keydown", event =&gt; {
+    if (event.key == " " &amp;&amp; event.ctrlKey) {
+    console.log("Continuing!");
+    }
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>En el ejemplo anterior (<i>Example5.html</i>), vemos que podemos registrar eventos al objeto <code class="highlighter-rouge">window</code>,de modo que, en el caso especifico
+de que se lea alguna tecla, y esta o estas sean las teclas <code class="highlighter-rouge">ctrl</code> y <code class="highlighter-rouge">espacio</code> ejecutara el evento.</p>
+
+<h2 id="default-actions">Default Actions</h2>
+
+<p>los eventos pueden tener alguna accion asociadas con las mismas. De mosdo que, si por ejemplo, si se hace click sobre un enlace se 
+obtenga el destino de dicho link.</p>
+
+<p>Para la mayoria de los eventos, los diferentes <code class="highlighter-rouge">handlers</code> de enventos de JavaScript son llamados antes de que la accion por defecto
+sea ejecutada. Si el <code class="highlighter-rouge">handler</code> no nos indica ninguna accion en particular, se ejecutara la que este establecida por defecto</p>
+
+<p>JavaScript nos facilita un metodo <code class="highlighter-rouge">preventDefault</code>, que se usa dentro de los handlers para evitar cualquier tipo de accion por defautl
+de dichos eventos. Tenemos por ejemplo <i>Example6.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="https://developer.mozilla.org/"&gt;MDN&lt;/a&gt;
+&lt;script&gt;
+let link = document.querySelector("a");
+link.addEventListener("click", event =&gt; {
+    console.log("Nope.");
+    event.preventDefault();
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Donde podemos destacar que creamos un enlace dentro de una etiqueta <code class="highlighter-rouge">&lt;a&gt;</code>, dicha etiqueta la guardamos como objeto, y asociamos un 
+<code class="highlighter-rouge">event handler</code> para cuando se realize un evento de tipo <code class="highlighter-rouge">click</code>. Dicho evento lo que hara es mostrar un mensaje, para posteriormente
+eliminar la accion por defecto.</p>
+
+<p>Aunque el metodo <code class="highlighter-rouge">preventDefault</code> es util se aconseja no usarlo a no ser que se tenga una muy buena razon, ya que puede romper el
+comportamiento de la pagina.</p>
+
+<h2 id="key-events">key Events</h2>
+
+<p>Las teclas tienen asociadas diferentes eventos:</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">Keydown</code>: este evento sucede cuando se oprime una tecla, pero no se limita solo a cuando fisicamente se oprime, sino que si se 
+mantiene mandara un evento cada vez que el teclado mande señal de dicha tecla, hasta que se deja de oprimir.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">keyup</code> : este evento sucede cuando se termina de oprimir una tecla</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;p&gt;This page turns violet when you hold the V key.&lt;/p&gt;
+  &lt;script&gt;
+  window.addEventListener("keydown", event =&gt; {
+      if (event.key == "v") {
+      document.body.style.background = "violet";
+      }
+  });
+  window.addEventListener("keyup", event =&gt; {
+      if (event.key == "v") {
+      document.body.style.background = "";
+      }
+  });
+  &lt;/script&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>En el codigo podemos ver que se crea un <code class="highlighter-rouge">handler</code> tanto para cuando se presiona la tecla <code class="highlighter-rouge">v</code> como cuando se suelta. Este codigo podremos
+encontrarlo en <i>Example7.html</i></p>
+
+<p>Otra cosa importante a destacar es que podemos registrar combinaciones de cualquier tipo de teclas presionadas al <code class="highlighter-rouge">handler</code> para definir
+un compotamiento del programa adecuado a dicho evento. En <i>Example8.html</i> tenemos :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Press Control-Space to continue.&lt;/p&gt;
+&lt;script&gt;
+window.addEventListener("keydown", event =&gt; {
+    if (event.key == " " &amp;&amp; event.ctrlKey) {
+    console.log("Continuing!");
+    }
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Donde podremos ver que el evento regustra cuando hacemos la combinacion <code class="highlighter-rouge">espacio</code> + <code class="highlighter-rouge">control</code>.</p>
+
+<h2 id="pointer-events">Pointer events</h2>
+
+<p>Actualmente existen 2 formas de apuntar a las cosas en pantalla: el raton y las pantallas tactiles. Cada una nos proporciona un tipo
+de evento diferente</p>
+
+<h3 id="mouse-clicks">mouse clicks</h3>
+
+<p>Cuando se realiza un click con el raton se pueden leer diferentes eventos:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">mousedown</code></li>
+  <li><code class="highlighter-rouge">mouseup</code></li>
+</ul>
+
+<p>Ambos tienen un comportamiento similar a <code class="highlighter-rouge">keydown</code> y a <code class="highlighter-rouge">keyup</code>. Otro evento que podemos encontrarnos es :</p>
+
+<ul>
+  <li><code class="highlighter-rouge">doubleclick</code></li>
+</ul>
+
+<p>Cuando dos clicks ocurren seguidos.6</p>
+
+<h3 id="mouse-motion">mouse motion</h3>
+
+<p>Cada vez que el puntero se mueve, se crea un evento <code class="highlighter-rouge">mousemove</code>. A travez de este evento podemos seguir la posicion del raton. Un ejemplo e esto lo encontramos en 
+<i>Example9.html</i>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Drag the bar to change its width:&lt;/p&gt;
+&lt;div style="background: orange; width: 60px; height: 20px"&gt;
+&lt;/div&gt;
+&lt;script&gt;
+let lastX; // Tracks the last observed mouse X position
+let bar = document.querySelector("div");
+bar.addEventListener("mousedown", event =&gt; {
+    if (event.button == 0) {
+    lastX = event.clientX;
+    window.addEventListener("mousemove", moved);
+    event.preventDefault(); // Prevent selection
+    }
+});
+
+function moved(event) {
+    if (event.buttons == 0) {
+    window.removeEventListener("mousemove", moved);
+    } else {
+    let dist = event.clientX - lastX;
+    let newWidth = Math.max(10, bar.offsetWidth + dist);
+    bar.style.width = newWidth + "px";
+    lastX = event.clientX;
+    }
+}
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>En este ehemplo podemos ver que controlamos 2 eventos, el primero es el de clickar sobre una zona anaranjada, y el segundo es el de <code class="highlighter-rouge">mousemove</code> mientras mantenemos el click presionado.</p>
+
+<h2 id="scroll-events">Scroll events</h2>
+
+<p>Cada vez que un elemento es movido con la rueda del raton o <code class="highlighter-rouge">scrolled</code>, el evento <code class="highlighter-rouge">scroll</code> es lanzado. Este tiene diferentes usos tales como saber que es lo que el
+usuario esta visualizando actualmente, o bien, para mostrar algun ripo de progreso en el contenido a mostrar. En <i>Example10.html</i></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;style&gt;
+#progress {
+    border-bottom: 2px solid blue;
+    width: 0;
+    position: fixed;
+    top: 0; left: 0;
+}
+&lt;/style&gt;
+&lt;div id="progress"&gt;&lt;/div&gt;
+&lt;script&gt;
+// Create some content
+document.body.appendChild(document.createTextNode(
+    "supercalifragilisticexpialidocious ".repeat(1000)));
+
+let bar = document.querySelector("#progress");
+window.addEventListener("scroll", () =&gt; {
+    let max = document.body.scrollHeight - innerHeight;
+    bar.style.width = `${(pageYOffset / max) * 100}%`;
+});
+&lt;/script&gt;
+</code></pre></div></div>
+
+<p>Se nos muestra una cantidad de texto enorme, y a medida que bajamos o subimos una barra de color azul aumenta o disminuye para 
+representar la cantidad de contenido que hemos visto y la que falta por ver.</p>
+
+<h2 id="focus-events">Focus events</h2>
+
+<p>A medida que el usuario navega por una pagina, es inevitable que tenga que interactuar con alguno de los elementos dispuestos dentro
+del contenido de dicha pagina. Se le llama <code class="highlighter-rouge">focus</code> a aquel elemento que esta actualmente en interaccion directa con el usuario, de 
+modo que si el usuario selecciona un <code class="highlighter-rouge">textbox</code> dicho elemento sera el que tenga el focus actual de la ventana, lo que le permitira al
+usuario al momento de escribir, que el contenido sea enviado a dicha <code class="highlighter-rouge">textbox</code>.</p>
+
+<p>Podemos encontrar un ejemplo de esto en <i>Example11.html</i>, en donde tendremos dos campos para introducir informacion, y vemos que
+al principio los marcos son de color negro, y al seleccionarlos, obtienen el focus y cambian a un gris.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;p&gt;Name: &lt;input type="text" data-help="Your full name"&gt;&lt;/p&gt;
+&lt;p&gt;Age: &lt;input type="text" data-help="Your age in years"&gt;&lt;/p&gt;
+&lt;p id="help"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+let help = document.querySelector("#help");
+let fields = document.querySelectorAll("input");
+for (let field of Array.from(fields)) {
+    field.addEventListener("focus", event =&gt; {
+    let text = event.target.getAttribute("data-help");
+    help.textContent = text;
+    });
+    field.addEventListener("blur", event =&gt; {
+    help.textContent = "";
+    });
+}
+&lt;/script&gt;
+</code></pre></div></div>
+
+<h2 id="load-events">Load events</h2>
+
+<p>El evento <code class="highlighter-rouge">load</code> es lanzado al cargar una pagina. Esto usualmente es usado para programar la inicializacion de acciones que requieran
+de todo el documento para ser ejecutados.</p>
+
+<p>Por otro lado cuando una pagina es cerrada o redirigida hacia otro sitio, tenemos que se ejecuta el evento <code class="highlighter-rouge">beforeunload</code>. El uso 
+principal del evento es para prevenir hacciones accidentales del usuario tales como cerrar un documento. Si se previene el 
+comportamientocon este evento y se establece una propiedad <code class="highlighter-rouge">returnValue</code> dentro de un evento, sobre un string, el buscador nos mostrara 
+un dialogo preguntando si realmente se quiere salir de la pagina.</p>
+
+<h2 id="events-and-event-loop">Events and event loop</h2>
+
+<p>En el contexto del <code class="highlighter-rouge">evento loop</code>, los <code class="highlighter-rouge">handler events</code> se comportan como cualquier otra notificacion asincrona. Estas son programadas para correr antes de que tengan ocacion de ejecutarse.</p>
+
+<p>El hecho de que los eventos pueden ser procesados solo cuando nada mas este corriendo, con lo que si el <code class="highlighter-rouge">event loop</code> esta asociado
+a algun otro trabajo, cualquier interaccion con la pagina sera retrasada hasta que el proceso termine. Con lo que si se programa
+demasiados trabajos, independientemente si tenemos algunos trabajos largos o varios trabajos cortos, la pagina se volvera lenta
+y horrible de usar.</p>
+
+<p>Si se quiere realizar realmente mantener procesos de consumo de tiempo en segundo plano, sin bloquear la pagina, el navegador nos 
+da <code class="highlighter-rouge">web workers</code>. Un <b>web worker</b> es un proceso de JavasCriptque trabaja de forma paralela al respecto del script principal.</p>
+
+<p>En un caso en el que se haga la raiz cuadrada de un nuemero pesado, y que consuma bastante tiempo de ejecucion que queremos que se 
+ejecute en un hilo paralelo. Deberemos escribir un fichero llamado <code class="highlighter-rouge">code/squareworker.js</code>. Esto responde a los mensajes resultantes
+de computar la raiz cuadrada y envia una respuesta :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>addEventListener("message", event =&gt; {
+    postMessage(event.data * event.data);
+});
+</code></pre></div></div>
+
+<p>Para evitar el problema de tener multiples hilos tocando los mismos datos, los trabajadores no comparten un ambito global o cualqier 
+otra informacion perteneciente al ambito del script principal. En cambio, puedes comunicarte con mensajes.</p>
+
+<p>El siguiente codigo genera un <code class="highlighter-rouge">worker</code> que ejecuta el script anterior, lo envia en algunos mensajes y expulsa la respuesta.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let squareWorker = new Worker("code/squareworker.js");
+    squareWorker.addEventListener("message", event =&gt; {
+     console.log("The worker responded:", event.data);
+});
+squareWorker.postMessage(10);
+squareWorker.postMessage(24);
+</code></pre></div></div>
+
+<p>La funcion <code class="highlighter-rouge">postMessage</code>, creara un evento <code class="highlighter-rouge">message</code> en el recividor. El script creado por el <code class="highlighter-rouge">worker</code> envia y recive mensajes a travez 
+del objeto <code class="highlighter-rouge">Worker</code>, donde el <code class="highlighter-rouge">worker</code> se comunica con el script que lo creo mediante un mensaje y escichando directamente en su 
+<code class="highlighter-rouge">global scope</code>. Esto lo podremos encontrar dentro de <i>Example12.js</i>.</p>
+
+<p>Solamente vaores que pueden ser representados como <code class="highlighter-rouge">JSON</code> pueden ser enviados como mensajes, en caso contrario se recivira una copia de 
+ellos, mas que el valor en si.</p>
+
+<h2 id="timer">timer</h2>
+
+<p>Vimos que <code class="highlighter-rouge">setTimeout</code> programa otra funcion para se llamada despues, y despues de un numero dado de milisegundos.</p>
+
+<p>A veces necesitas cancelar una funcion que se ha programado. Esto esta hecho mediante el almacenaje del valor retornado por 
+<code class="highlighter-rouge">setTimeout</code> y llamando a <code class="highlighter-rouge">clearTimeout</code>. <i>Ejemplo13.js</i></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let bombTimer = setTimeout(() =&gt; {
+    console.log("BOOM!");
+}, 500);
+
+if (Math.random() &lt; 0.5) { // 50% chance
+    console.log("Defused.");
+    clearTimeout(bombTimer);
+}
+</code></pre></div></div>
+
+<p>La funcion <code class="highlighter-rouge">cancelAnimateFrame</code> trabaja en el mismo modo que <code class="highlighter-rouge">clearTimeout</code>, llamandolo en un valor retornado por 
+<code class="highlighter-rouge">requestAnimationFrame</code> cancelara dicho <i>frame</i></p>
+
+<p>Una funcion similar al conjunto de sintrucciones <code class="highlighter-rouge">&lt;setInterval, clearInterval&gt;</code> son usados para establecer los temporizadores que 
+deben repetir cada <b>X&lt;/i&gt; milisegundos.<i> Example14.js</i>:</b></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let ticks = 0;
+let clock = setInterval(() =&gt; {
+    console.log("tick", ticks++);
+    if (ticks == 10) {
+        clearInterval(clock);
+        console.log("stop.");
+    }
+}, 200);
+</code></pre></div></div>
+
