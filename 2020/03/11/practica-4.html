@@ -400,3 +400,88 @@ let clock = setInterval(() =&gt; {
 }, 200);
 </code></pre></div></div>
 
+<hr />
+
+<h1 id="jekyll">jekyll</h1>
+
+<p>Jekyll es un software que nos permite crear paginas html estaticas. Para poder instalarlo tendremos que tener instalado <code class="highlighter-rouge">rvm</code>, y 
+ejecutar los siguientes comandos:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install bundler jekyll
+jekyll new [nombre de proyecto]
+cd [nombre de proyecto]
+</code></pre></div></div>
+
+<p>Y veremos que tendremos un arbol de directorio parecido a este:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.
+├ 404.html
+├ Gemfile
+├ Gemfile.lock
+├ _config.yml
+├ _posts
+│   └ 2020-03-08-practica-4.md
+├ _site
+│   ├ 2020
+│   │   └ 03
+│   │       └ 08
+│   │           └ practica-4.html
+│   ├ 404.html
+│   ├ about
+│   │   └ index.html
+│   ├ assets
+│   │   ├ main.css
+│   │   ├ main.css.map
+│   │   └ minima-social-icons.svg
+│   ├ feed.xml
+│   └ index.html
+├ about.markdown
+└ index.markdown
+</code></pre></div></div>
+
+<p>Donde podemos destacar los siguiente:</p>
+
+<ol>
+  <li>El fichero <code class="highlighter-rouge">_config.yml</code> tendremos una configuracion basica sobre el sitio.</li>
+  <li>En el directorio <code class="highlighter-rouge">_post</code> guardaremos los diferentes post a subir o registrar, deberan tener el formato YYYY-DD-MM-[nombre].md</li>
+  <li>
+    <p>Para una modificacion mas personalizada podremos ir al directorio donde nuestra maquina guarda el programa, para ello ejecutamos en nuestra maquina:</p>
+
+    <p>bundle info –path minima</p>
+  </li>
+</ol>
+
+<p>Esto nos dara la ruta para poder acceder, y veremos el siguiente arbol de directorio:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.
+├ LICENSE.txt
+├ README.md
+├ _includes
+│   ├ disqus_comments.html
+│   ├ footer.html
+│   ├ google-analytics.html
+│   ├ head.html
+│   ├ header.html
+│   ├ icon-github.html
+│   ├ icon-github.svg
+│   ├ icon-twitter.html
+│   ├ icon-twitter.svg
+│   └ social.html
+├ _layouts
+│   ├ default.html
+│   ├ home.html
+│   ├ page.html
+│   └ post.html
+├ _sass
+│   ├ minima
+│   │   ├ _base.scss
+│   │   ├ _layout.scss
+│   │   └ _syntax-highlighting.scss
+│   └ minima.scss
+└ assets
+    ├ main.scss
+    └ minima-social-icons.svg
+</code></pre></div></div>
+
+<p>Donde podremos modificar los diferentes layouts en el directorio <code class="highlighter-rouge">_layouts</code></p>
+
