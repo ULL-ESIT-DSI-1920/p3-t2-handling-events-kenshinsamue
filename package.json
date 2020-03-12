@@ -1,0 +1,22 @@
+{
+  "name": "practica4",
+  "version": "1.0.0",
+  "description": "Practica 4 de la asignatura DSI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ULL-ESIT-DSI-1920/p3-t2-handling-events-kenshinsamue.git"
+  },
+  "author": "Enrique Manuel Pedroza Castillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ULL-ESIT-DSI-1920/p3-t2-handling-events-kenshinsamue/issues"
+  },
+  "homepage": "https://github.com/ULL-ESIT-DSI-1920/p3-t2-handling-events-kenshinsamue#readme",
+  "dependencies": {
+    "gh-pages": "^2.2.0"
+  }
+}
